@@ -1,0 +1,26 @@
+{
+  "name": "google-sheets-to-FAQ",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "npx nodemon src/index.js",
+    "build": "sh build.sh"
+  },
+  "repository": "https://github.com/Jewcub/google-sheets-to-FAQ.git",
+  "author": "Jewcub <52448067+Jewcub@users.noreply.github.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "googleapis": "^67.0.0",
+    "ip": "^1.1.5",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
