@@ -6,7 +6,11 @@ const faqFolder = path.join(srcDir + "/assets/faqs");
 
 const defaultFAQs = [
   { question: "What's up?", answer: "Not much" },
-  { question: "What's up?", answer: "Not much" },
+  {
+    question: "What's up?",
+    answer:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis accusantium possimus amet, animi qui ut maxime nesciunt! Perspiciatis cupiditate magnam amet molestias quo excepturi, nobis deserunt aut similique quia in",
+  },
 ];
 const getFaqRoute = async (req, res) => {
   const FAQs = await getFAQs();
