@@ -32,10 +32,13 @@ ul {
   box-shadow: grey -1px 1px 4px 2px;
   border-radius: 10px;
   cursor: pointer;
-  max-width: 700px;
-  min-width: 50%;
+  width: 70vw;
 }
-
+@media screen and (min-width: 900px) {
+  .faq-set {
+    min-width: 60vw;
+  }
+}
 @media screen and (max-width: 600px) {
   .faq-set {
     min-width: 80vw;
