@@ -33,24 +33,6 @@ const faqsTemplate = (faqData) => {
   return returnStr;
 };
 
-const htmlTemplate = (FAQs) => {
-  console.log("printing template", FAQs);
-  let returnStr = ``;
-  returnStr += `<!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Document</title>
-    </head>
-    <body>
-      <ul class="faq-list">${FAQs}</ul>
-    </body>
-  </html>`;
-  console.log("printing template returnStr", returnStr);
-  return returnStr;
-};
 const homeRoute = async (req, res) => {
   try {
     console.log("/faq/ called");
