@@ -35,11 +35,25 @@ async function authorize() {
     clientSecret,
     redirectUris
   );
-  // Check if we have previously stored a token.
+  // Check if we have previously stored a token. try to get from local file, if not use .env, if not, apply for new one
   let token;
   try {
     token = await fsPromise.readFile(TOKEN_PATH);
-    if (!token) throw new Error("token not found");
+    if (!token) {
+      if (!process.env.access_token) throw new Error("token not found");
+      else
+        token = {
+          access_token: process.env.access_token,
+          refresh_token: process.env.refresh_token,
+          scope: process.env.scope,
+          token_type: "Bearer",
+          expiry_date: process.env.expiry_date,
+        };
+      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+        if (err) return console.error(err);
+        console.log("Token stored to", TOKEN_PATH);
+      });
+    }
   } catch (error) {
     console.log({ error });
     token = getAccessToken(oAuth2Client);
