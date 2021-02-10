@@ -10,7 +10,7 @@ const parseHTML = (html) => {
   $("[class*=cowc-0]").each(function (i, el) {
     const section = $(this);
     const sectionChildren = section.nextUntil("[class*=cowc-0]");
-    console.log("found children: ", sectionChildren.toArray().length);
+    // console.log("found children: ", sectionChildren.toArray().length);
     const sectionOutput = { name: section.find("span").text(), QAndAs: [] };
 
     const Qs = sectionChildren.filter("[class*=cowc-1]");

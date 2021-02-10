@@ -10,15 +10,32 @@ const {
   getFileModified,
 } = require("../googleService/googleDrive");
 
-const localFilesOrder = async () => {
+const localFilesTimes = async () => {
   const list = await fs.readdir(projectPath + docSavePath);
-  return list
-    .map((name) =>
-      name.startsWith("1") ? parseInt(name.split(".html")[0]) : 0
-    )
-    .filter((name) => name !== 0);
+  return (
+    list
+      .map((name) =>
+        name.startsWith("1") ? parseInt(name.split(".html")[0]) : 0
+      )
+      // filter out local .dstore file
+      .filter((name) => name !== 0)
+  );
 };
-
+const deleteExtraFiles = async (localFilesList, newFaqPath) => {
+  // only keep most recent 3
+  try {
+    if (localFilesList.length > 3) {
+      fs.unlink(
+        projectPath + docSavePath + Math.min(...localFilesList) + ".json"
+      );
+      // recursive if needed
+      deleteExtraFiles(await localFilesTimes());
+    }
+    fs.unlink(newFaqPath + ".html");
+  } catch (error) {
+    console.log({ error });
+  }
+};
 /** check if saved file version is most recent. if so serve that, if not download and serve new one */
 const getFAQ = async (router) => {
   router.get("/get-faq", async function (req, res, next) {
@@ -26,7 +43,7 @@ const getFAQ = async (router) => {
     try {
       //   const googleAccountFiles = await listFiles();
       //   console.log({ googleAccountFiles });
-      let localFiles = await localFilesOrder();
+      let localFiles = await localFilesTimes();
       console.log({ localFiles });
       const modified = await getFileModified(docID);
       console.log({ modified });
@@ -39,30 +56,21 @@ const getFAQ = async (router) => {
 
       const download = async () => {
         const now = new Date().getTime();
-        const filePath = path.join(projectPath, docSavePath + now + ".html");
-        await downloadFile(docID, filePath);
-
-        localFiles = await localFilesOrder();
-        // only keep most recent 3
-        // if (localFiles.length >= 3)
-        //   fs.unlink(
-        //     projectPath + docSavePath + Math.min(...localFiles) + ".json"
-        //   );
-        mostRecentLocal = Math.max(...localFiles);
-        const faqRaw = await fs.readFile(
-          projectPath + docSavePath + mostRecentLocal + ".html",
-          "utf-8"
-        );
+        const newFaqPath = projectPath + docSavePath + now;
+        await downloadFile(docID, newFaqPath + ".html");
+        const faqRaw = await fs.readFile(newFaqPath + ".html", "utf-8");
         const formatted = parseHTML(faqRaw);
-        console.log({ formatted });
         await fs.writeFile(
-          path.join(projectPath, docSavePath + mostRecentLocal + ".json"),
+          path.join(newFaqPath + ".json"),
           JSON.stringify(formatted)
         );
-        // fs.unlink(projectPath + docSavePath + mostRecentLocal + ".html");
+        // delete html
+        localFiles = await localFilesTimes();
+        mostRecentLocal = Math.max(...localFiles);
+        deleteExtraFiles(localFiles, newFaqPath);
       };
       if (wasModified) {
-        download();
+        await download();
       }
       let faq;
       try {
@@ -72,13 +80,15 @@ const getFAQ = async (router) => {
         );
       } catch (error) {
         await download();
+      }
+      try {
         faq = await fs.readFile(
           projectPath + docSavePath + mostRecentLocal + ".json",
           "utf-8"
         );
+      } catch (error) {
+        console.log({ error });
       }
-
-      // console.log({ faq });
       res.json({ faq });
     } catch (error) {
       console.log({ error });

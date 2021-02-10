@@ -8,15 +8,10 @@ const projectPath = config.projectPath;
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
 
 const TOKEN_PATH = path.join(projectPath, "/server/googleService/token.json");
-const CREDS_PATH = path.join(
-  projectPath,
-  "/server/googleService/credentials.json"
-);
 
 const connectDrive = async () => {
   try {
-    const content = await fsPromise.readFile(CREDS_PATH);
-    const auth = await authorize(JSON.parse(content));
+    const auth = await authorize();
     const drive = google.drive({ version: "v3", auth });
     return drive;
   } catch (error) {
@@ -25,25 +20,21 @@ const connectDrive = async () => {
 };
 
 /**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- * @param {Object} credentials The authorization client credentials.
+ * Create an OAuth2 client
  */
-async function authorize(credentials) {
+async function authorize() {
+  const clientId = process.env.CLIENT_ID;
+  const clientSecret = process.env.CLIENT_SECRET;
+  const redirectUris =
+    process.env.NODE_ENV === "production"
+      ? ["https://doc2faq-xkmml2qcbq-de.a.run.app/"]
+      : ["http://localhost:3000", "http://localhost:3001"];
   // eslint-disable-next-line camelcase
-  const client_secret = process.env.CLIENT_SECRET;
-  // eslint-disable-next-line camelcase
-  const { client_id, redirect_uris } = credentials.web;
   const oAuth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
+    clientId,
+    clientSecret,
+    redirectUris
   );
-  /*     
-    clientId?: string;
-    clientSecret?: string;
-    redirectUri?: string;
-     */
   // Check if we have previously stored a token.
   let token;
   try {
