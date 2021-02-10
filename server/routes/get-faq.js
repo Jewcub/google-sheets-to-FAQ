@@ -1,7 +1,6 @@
 const fs = require("fs").promises;
 const path = require("path");
-const { projectPath } = require("../config");
-const docID = "1imzQociewnWFW8dfPM_4cRDrDWdBvhYMcbQ8C6e1-7g";
+const { projectPath, docID } = require("../config");
 const docSavePath = "/server/files/";
 const parseHTML = require("../utils/parseHTML");
 const {

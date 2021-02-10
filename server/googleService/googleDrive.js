@@ -3,8 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
 const { google } = require("googleapis");
-const config = require("../config");
-const projectPath = config.projectPath;
+const { redirectUris, projectPath } = require("../config");
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
 
 const TOKEN_PATH = path.join(projectPath, "/server/googleService/token.json");
@@ -25,11 +24,6 @@ const connectDrive = async () => {
 async function authorize() {
   const clientId = process.env.CLIENT_ID;
   const clientSecret = process.env.CLIENT_SECRET;
-  const redirectUris =
-    process.env.NODE_ENV === "production"
-      ? ["https://doc2faq-xkmml2qcbq-de.a.run.app/"]
-      : ["http://localhost:3000", "http://localhost:3001"];
-  // eslint-disable-next-line camelcase
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
@@ -39,6 +33,10 @@ async function authorize() {
   let token;
   try {
     token = await fsPromise.readFile(TOKEN_PATH);
+  } catch (error) {
+    token = false;
+  }
+  try {
     if (!token) {
       if (!process.env.access_token) throw new Error("token not found");
       else
@@ -50,7 +48,7 @@ async function authorize() {
           expiry_date: process.env.expiry_date,
         };
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
+        if (err) throw new Error(err);
         console.log("Token stored to", TOKEN_PATH);
       });
     }

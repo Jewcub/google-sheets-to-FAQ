@@ -107,3 +107,4 @@ client/build
 
 
 server/googleService/token.json
+client/build/**/*
