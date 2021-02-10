@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 const path = require("path");
-const config = require("../config");
+const config = require("./config");
 const projectPath = config.projectPath;
 const PORT =
   process.env.PORT || process.env.NODE_ENV === "production" ? 80 : 3001;
