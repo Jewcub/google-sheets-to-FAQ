@@ -8,7 +8,7 @@
     "start": "run-s build:client start:server",
     "dev:client": "cd ./client && yarn dev",
     "dev:server": "cd ./server && yarn dev",
-    "dev": "run-p dev:*",
+    "dev": "run-s dev:*",
     "deploy:image": "sh build.sh",
     "deploy": "run-s build:client deploy:image"
   },

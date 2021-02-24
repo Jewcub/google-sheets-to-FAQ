@@ -23,14 +23,20 @@ const localFilesTimes = async () => {
 const deleteExtraFiles = async (localFilesList, newFaqPath) => {
   // only keep most recent 3
   try {
-    if (localFilesList.length > 3) {
-      fs.unlink(
-        projectPath + docSavePath + Math.min(...localFilesList) + ".json"
-      );
+    try {
+      fs.stat(newFaqPath + ".html")
+        .then(() => fs.unlink(newFaqPath + ".html"))
+        .catch((err) => console.log({ err }));
+    } catch (error) {}
+    if (localFilesList.length > 2) {
+      const path =
+        projectPath + docSavePath + Math.min(...localFilesList) + ".json";
+      fs.stat(path)
+        .then(() => fs.unlink(path))
+        .catch((err) => console.log({ err }));
       // recursive if needed
       deleteExtraFiles(await localFilesTimes());
     }
-    fs.unlink(newFaqPath + ".html");
   } catch (error) {
     console.log({ error });
   }

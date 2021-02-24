@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.g-bold {
+  font-weight: 700;
+}
+.g-italic {
+  font-style: italic;
+}
+.g-underline {
+  text-decoration: underline;
+}
+.question {
+  text-align: left;
+}
+ul {
+  /* list-style: none; */
+}

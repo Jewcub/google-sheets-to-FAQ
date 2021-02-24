@@ -3,7 +3,9 @@ import QAndA from "./QAndA";
 export default function Section({ section }) {
   return (
     <div>
-      <h2 className="section-title">{section.name}</h2>
+      <button>
+        <h2 className="section-title">{section.name}</h2>
+      </button>
       {section.QAndAs.map((qAndA, i) => (
         <QAndA key={i} QAndA={qAndA}></QAndA>
       ))}

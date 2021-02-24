@@ -27,38 +27,17 @@ async function authorize() {
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
-    redirectUris
+    redirectUris[0]
   );
   // Check if we have previously stored a token. try to get from local file, if not use .env, if not, apply for new one
   let token;
   try {
     token = await fsPromise.readFile(TOKEN_PATH);
   } catch (error) {
-    token = false;
-  }
-  try {
-    if (!token) {
-      if (!process.env.access_token) throw new Error("token not found");
-      else
-        token = {
-          access_token: process.env.access_token,
-          refresh_token: process.env.refresh_token,
-          scope: process.env.scope,
-          token_type: "Bearer",
-          expiry_date: process.env.expiry_date,
-        };
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) throw new Error(err);
-        console.log("Token stored to", TOKEN_PATH);
-      });
-    }
-  } catch (error) {
-    console.log({ error });
     token = getAccessToken(oAuth2Client);
-  } finally {
-    oAuth2Client.setCredentials(JSON.parse(token));
-    return oAuth2Client;
   }
+  oAuth2Client.setCredentials(JSON.parse(token));
+  return oAuth2Client;
 }
 
 /**
@@ -69,6 +48,7 @@ function getAccessToken(oAuth2Client) {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
+    prompt: "consent",
   });
   console.log("Authorize this app by visiting this url:", authUrl);
   const rl = readline.createInterface({

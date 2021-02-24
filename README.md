@@ -1,6 +1,6 @@
 # doc2faq
 
-Pull content from a google sheets to generate a FAQ page
+Pull content from a google doc to generate a FAQ page
 
 install google cloud [sdk](https://cloud.google.com/sdk/docs/install#mac)
 
@@ -14,3 +14,5 @@ deploy once. get uri and add to uri list (in config)
 in cloud run edit and deploy revision:
 copy token.json info into the envs
 allocate 500mb space for project
+
+we deleted all styles, but we still need the formatting styles in the questions. consider just leaving text-transforms
