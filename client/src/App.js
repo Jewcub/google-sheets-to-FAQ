@@ -1,16 +1,14 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import Section from "./components/Section";
+import Body from "./components/Body.jsx";
 function App() {
-  const [faqHTML, setFaqHTML] = useState(0);
+  const [faqJSON, setfaqJSON] = useState({ sections: null });
   const start = async () => {
-    console.log("NODE_ENV: ", process.env.NODE_ENV);
-    setFaqHTML(`<p>loading...</p>`);
+    // console.log("NODE_ENV: ", process.env.NODE_ENV);
     const faqReq = await fetch("/api/get-faq");
     const data = await faqReq.json();
-    console.log({ data });
-    setFaqHTML(JSON.parse(data.faq));
-    console.log({ faqHTML });
+    await setfaqJSON(JSON.parse(data.faq));
+    // console.log({ faqJSON });
   };
   useEffect(() => {
     start();
@@ -18,11 +16,7 @@ function App() {
   return (
     <div className="App">
       <h1> KAVA FAQ</h1>
-      {faqHTML.sections
-        ? faqHTML.sections.map((section, i) => (
-            <Section key={i} section={section}></Section>
-          ))
-        : "loading...."}
+      {faqJSON.sections ? <Body content={faqJSON}></Body> : "loading...."}
     </div>
   );
 }
