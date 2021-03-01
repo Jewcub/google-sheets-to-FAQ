@@ -37,8 +37,12 @@ const parseHTML = (html) => {
           .addClass("g-underline");
 
         answer.find("*").removeAttr("style"); // remove all styles
-        // console.log({ answerHtml: answer.html() });
-        QOutput.answers.push(answer.html());
+        // console.log({
+        //   answerHtml: answer.html(),
+        //   length: JSON.stringify(answer.html().valueOf()).length,
+        // });
+        if (JSON.stringify(answer.html().valueOf()).length > 2)
+          QOutput.answers.push(answer.html());
       });
       sectionOutput.QAndAs.push(QOutput);
     });
