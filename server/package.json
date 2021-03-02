@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "env NODE_ENV='production' node dist/index.js",
+    "start": "yarn build && env NODE_ENV='production' node dist/index.js",
     "dev": "ts-node-dev --inspect --poll --respawn ./src src/index.ts",
-    "build": "tsc ./src/index.ts",
+    "build": "tsc -p tsconfig.build.json && cp -r ./src/files ./dist/files",
     "test": "jest",
     "test-watch": "jest --watchAll"
   },

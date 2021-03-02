@@ -1,18 +1,18 @@
 import { promises as fs } from 'fs';
 import path = require('path');
 import config from '../config';
-const { projectPath, docID } = config;
+const { srcPath, docID } = config;
 import { Router } from 'express';
-const docSavePath = '/server/files/';
+const docSavePath = '/files/';
 import parseHTML from '../utils/parseHTML';
-const {
+import {
   downloadFile,
   //   listFiles,
   getFileModified,
-} = require('../googleService/googleDrive');
+} from '../googleService/googleDrive';
 
 const localFilesTimes = async () => {
-  const list = await fs.readdir(projectPath + docSavePath);
+  const list = await fs.readdir(srcPath + docSavePath);
   return (
     list
       .map((name) => (name.startsWith('1') ? parseInt(name.split('.html')[0]) : 0))
@@ -29,7 +29,7 @@ const deleteExtraFiles = async (localFilesList: number[], newFaqPath: string) =>
         .catch((err) => console.log({ err }));
     } catch (error) {}
     if (localFilesList.length > 2) {
-      const path = projectPath + docSavePath + Math.min(...localFilesList) + '.json';
+      const path = srcPath + docSavePath + Math.min(...localFilesList) + '.json';
       fs.stat(path)
         .then(() => fs.unlink(path))
         .catch((err) => console.log({ err }));
@@ -60,7 +60,7 @@ const getFAQ = async (router: Router) => {
 
       const download = async () => {
         const now = new Date().getTime();
-        const newFaqPath = projectPath + docSavePath + now;
+        const newFaqPath = srcPath + docSavePath + now;
         await downloadFile(docID, newFaqPath + '.html');
         const faqRaw = await fs.readFile(newFaqPath + '.html', 'utf-8');
         const formatted = parseHTML(faqRaw);
@@ -75,12 +75,12 @@ const getFAQ = async (router: Router) => {
       }
       let faq;
       try {
-        faq = await fs.readFile(projectPath + docSavePath + mostRecentLocal + '.json', 'utf-8');
+        faq = await fs.readFile(srcPath + docSavePath + mostRecentLocal + '.json', 'utf-8');
       } catch (error) {
         await download();
       }
       try {
-        faq = await fs.readFile(projectPath + docSavePath + mostRecentLocal + '.json', 'utf-8');
+        faq = await fs.readFile(srcPath + docSavePath + mostRecentLocal + '.json', 'utf-8');
       } catch (error) {
         console.log({ error });
       }

@@ -11,7 +11,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(projectPath, '/client/build')));
 // var whitelist = ["http://example1.com", "http://example2.com"];
 // var corsOptions = {
 //   origin: function (origin, callback) {

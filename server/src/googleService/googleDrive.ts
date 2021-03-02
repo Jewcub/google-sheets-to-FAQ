@@ -1,13 +1,14 @@
-import fs, { promises as fsPromise } from 'fs';
+import { promises as fsPromise } from 'fs';
+import fs = require('fs');
 import path = require('path');
 import readline = require('readline');
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library/build/src/auth/oauth2client';
 import config from '../config';
-const { redirectUris, projectPath } = config;
+const { redirectUris, srcPath } = config;
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 
-const TOKEN_PATH = path.join(projectPath, '/server/files/token.json');
+const TOKEN_PATH = path.join(srcPath, '/files/token.json');
 
 const connectDrive = async () => {
   try {

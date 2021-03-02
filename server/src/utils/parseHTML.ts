@@ -2,11 +2,12 @@ import cheerio = require('cheerio');
 const parseHTML = (html: string) => {
   const $ = cheerio.load(html);
   // replace google stylings into classes
-  $('*').find(`[style*="font-weight:700"]`).addClass('g-bold');
-  $('*').find(`[style*="font-style:italic"]`).addClass('g-italic');
-  $('*').find(`[style*="text-decoration:underline"]`).addClass('g-underline');
+  $(`[style*="font-weight:700"]`).addClass('g-bold');
+  $(`[style*="font-style:italic"]`).addClass('g-italic');
+  $(`[style*="text-decoration:underline"]`).addClass('g-underline');
   $('*').removeAttr('style'); // remove all styles
   // find all the cow-o's and replace to section class
+  $('*').find(`[class*=cowc-0]`).removeClass('').addClass('faq-section');
   // consider using toArray() to avoid using $(this)
 
   console.log({ body: $('body').html() });
@@ -19,16 +20,15 @@ const parseHTML = (html: string) => {
   const output: { sections: section[] } = { sections: [] };
   // Jquery cannot use arrow function is we want 'this' to be correct
   $('[class*=cowc-0]').each(function (i, el) {
-    //@ts-ignore
     const section = $(this);
     const sectionOutput: section = { name: section.find('span').text(), QAndAs: [] };
 
     const questions = section.nextUntil('[class*=cowc-0]');
-    const QArray = questions.map(function () {
-      //@ts-ignore
+    const QArray = questions.map(function (i, el) {
+      console.log($(this).html());
       $(this).html();
     });
-    console.log({ QArray });
+
     questions.each(function () {
       //@ts-ignore
 

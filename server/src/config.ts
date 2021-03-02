@@ -1,5 +1,6 @@
 import path = require('path');
 const projectPath = path.resolve(__dirname, '../../');
+const srcPath = path.resolve(__dirname);
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -10,4 +11,4 @@ const redirectUris =
     ? ['https://doc2faq-xkmml2qcbq-de.a.run.app/']
     : ['http://localhost:3000', 'http://localhost:3001'];
 // console.log("client secret", process.env.CLIENT_SECRET);
-export default { projectPath, docID, redirectUris };
+export default { projectPath, srcPath, docID, redirectUris };
