@@ -1,20 +1,21 @@
-const fsPromise = require("fs").promises;
-const fs = require("fs");
-const path = require("path");
-const readline = require("readline");
-const { google } = require("googleapis");
-const { redirectUris, projectPath } = require("../config");
-const SCOPES = ["https://www.googleapis.com/auth/drive"];
+import fs, { promises as fsPromise } from 'fs';
+import path = require('path');
+import readline = require('readline');
+import { google } from 'googleapis';
+import { OAuth2Client } from 'google-auth-library/build/src/auth/oauth2client';
+import config from '../config';
+const { redirectUris, projectPath } = config;
+const SCOPES = ['https://www.googleapis.com/auth/drive'];
 
-const TOKEN_PATH = path.join(projectPath, "/server/googleService/token.json");
+const TOKEN_PATH = path.join(projectPath, '/server/files/token.json');
 
 const connectDrive = async () => {
   try {
     const auth = await authorize();
-    const drive = google.drive({ version: "v3", auth });
+    const drive = google.drive({ version: 'v3', auth });
     return drive;
   } catch (error) {
-    console.log("Error loading client secret file:", error);
+    console.log('Error loading client secret file:', error);
   }
 };
 
@@ -24,11 +25,7 @@ const connectDrive = async () => {
 async function authorize() {
   const clientId = process.env.CLIENT_ID;
   const clientSecret = process.env.CLIENT_SECRET;
-  const oAuth2Client = new google.auth.OAuth2(
-    clientId,
-    clientSecret,
-    redirectUris[0]
-  );
+  const oAuth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUris[0]);
   // Check if we have previously stored a token. try to get from local file, if not use .env, if not, apply for new one
   let token;
   try {
@@ -36,7 +33,7 @@ async function authorize() {
   } catch (error) {
     token = getAccessToken(oAuth2Client);
   }
-  oAuth2Client.setCredentials(JSON.parse(token));
+  oAuth2Client.setCredentials(JSON.parse(token as any));
   return oAuth2Client;
 }
 
@@ -44,26 +41,26 @@ async function authorize() {
  * Get and store new token after prompting for user authorization, and then
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  */
-function getAccessToken(oAuth2Client) {
+function getAccessToken(oAuth2Client: OAuth2Client) {
   const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: "offline",
+    access_type: 'offline',
     scope: SCOPES,
-    prompt: "consent",
+    prompt: 'consent',
   });
-  console.log("Authorize this app by visiting this url:", authUrl);
+  console.log('Authorize this app by visiting this url:', authUrl);
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
-  rl.question("Enter the code from that page here: ", (code) => {
+  rl.question('Enter the code from that page here: ', (code) => {
     rl.close();
     oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.error("Error retrieving access token", err);
+      if (err) return console.error('Error retrieving access token', err);
       oAuth2Client.setCredentials(token);
       // Store the token to disk for later program executions
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
         if (err) return console.error(err);
-        console.log("Token stored to", TOKEN_PATH);
+        console.log('Token stored to', TOKEN_PATH);
       });
       return token;
     });
@@ -78,27 +75,27 @@ async function listFiles() {
   const drive = await connectDrive();
   const res = await drive.files.list({
     pageSize: 10,
-    fields: "nextPageToken, files(id, name)",
+    fields: 'nextPageToken, files(id, name)',
   });
   const files = res.data.files;
   if (files.length) {
-    console.log("Files:");
+    console.log('Files:');
     files.map((file) => {
       console.log(`${file.name} (${file.id})`);
     });
     return files;
   } else {
-    console.log("No files found.");
+    console.log('No files found.');
   }
 }
 
 /** Get a file and save it to the path */
-async function downloadFile(fileId, filePath) {
+async function downloadFile(fileId: string, filePath: string) {
   const drive = await connectDrive();
 
   const res = await drive.files.export(
-    { fileId: fileId, mimeType: "text/html" },
-    { responseType: "stream" }
+    { fileId: fileId, mimeType: 'text/html' },
+    { responseType: 'stream' },
   );
 
   return new Promise((resolve, reject) => {
@@ -109,17 +106,18 @@ async function downloadFile(fileId, filePath) {
     let progress = 0;
 
     res.data
-      .on("end", () => {
-        console.log("Done downloading file.");
+      .on('end', () => {
+        console.log('Done downloading file.');
         resolve(filePath);
       })
-      .on("error", (err) => {
-        console.error("Error downloading file.");
+      .on('error', (err) => {
+        console.error('Error downloading file.');
         reject(err);
       })
-      .on("data", (d) => {
+      .on('data', (d) => {
         progress += d.length;
         if (process.stdout.isTTY) {
+          //@ts-ignore
           process.stdout.clearLine();
           process.stdout.cursorTo(0);
           process.stdout.write(`Downloaded ${progress} bytes`);
@@ -129,13 +127,13 @@ async function downloadFile(fileId, filePath) {
   });
 }
 
-const getFileModified = async (fileId) => {
+const getFileModified = async (fileId: string) => {
   const drive = await connectDrive();
-  const res = await drive.files.get({ fileId, fields: "modifiedTime" });
+  const res = await drive.files.get({ fileId, fields: 'modifiedTime' });
   console.log({ res: res.data.modifiedTime });
   const result = res.data.modifiedTime;
   console.log({ result });
   return result;
 };
 
-module.exports = { downloadFile, listFiles, getFileModified };
+export { downloadFile, listFiles, getFileModified };

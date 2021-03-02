@@ -109,8 +109,8 @@ client/build
 server/googleService/token.json
 
 client/build/**/*
-client/build/index.html
-client/build/asset-manifest.json
-client/build/index.html
-client/build/static/js/2.e7170983.chunk.js.map
-client/build/static/js/3.1db72f56.chunk.js.map
+client/build/
+server/files/
+.DS_Store
+
+server/tsconfig.json
