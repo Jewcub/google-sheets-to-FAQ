@@ -15,7 +15,7 @@
     "deploy": "yarn build:client && yarn deploy:image",
     "inst": "cd ./server && yarn install && cd ../client && yarn install"
   },
-  "repository": "https://github.com/Jewcub/google-sheets-to-FAQ.git",
+  "repository": "https://github.com/Jewcub/doc2faq.git",
   "author": "Jewcub <52448067+Jewcub@users.noreply.github.com>",
   "license": "MIT"
 }
