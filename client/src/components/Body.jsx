@@ -5,7 +5,7 @@ export default function Body({ content }) {
   const [selected, setSelected] = useState(content.sections[0].name);
   console.log({ content });
   return (
-    <div>
+    <div className="faq-body">
       {content.sections.map((section, i) => (
         <button
           className="section-title"
@@ -17,7 +17,7 @@ export default function Body({ content }) {
       ))}
       {content.sections.map((section, i) =>
         section.name === selected ? (
-          <Section key={i} section={section}></Section>
+          <Section className="section-body" key={i} section={section}></Section>
         ) : (
           ""
         )
