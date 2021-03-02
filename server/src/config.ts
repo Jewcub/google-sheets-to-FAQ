@@ -6,7 +6,7 @@ dotenv.config();
 
 // complete faq '1imzQociewnWFW8dfPM_4cRDrDWdBvhYMcbQ8C6e1-7g'
 // test faq '1zjKrSJikBnQWo8cKZILTEt63zh_PYjMHQlIgqLny4Rs'
-const docID = '1zjKrSJikBnQWo8cKZILTEt63zh_PYjMHQlIgqLny4Rs';
+const docID = '1imzQociewnWFW8dfPM_4cRDrDWdBvhYMcbQ8C6e1-7g';
 
 const redirectUris =
   process.env.NODE_ENV === 'production'

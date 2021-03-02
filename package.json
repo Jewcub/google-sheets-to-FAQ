@@ -12,7 +12,8 @@
     "test:server": "cd server && yarn test",
     "dev": "yarn dev:client && yarn dev:server",
     "deploy:image": "sh build.sh",
-    "deploy": "yarn build:client && yarn deploy:image"
+    "deploy": "yarn build:client && yarn deploy:image",
+    "inst": "cd ./server && yarn install && cd ../client && yarn install"
   },
   "repository": "https://github.com/Jewcub/google-sheets-to-FAQ.git",
   "author": "Jewcub <52448067+Jewcub@users.noreply.github.com>",
