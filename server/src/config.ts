@@ -4,6 +4,8 @@ const srcPath = path.resolve(__dirname);
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+// complete faq '1imzQociewnWFW8dfPM_4cRDrDWdBvhYMcbQ8C6e1-7g'
+// test faq '1zjKrSJikBnQWo8cKZILTEt63zh_PYjMHQlIgqLny4Rs'
 const docID = '1zjKrSJikBnQWo8cKZILTEt63zh_PYjMHQlIgqLny4Rs';
 
 const redirectUris =

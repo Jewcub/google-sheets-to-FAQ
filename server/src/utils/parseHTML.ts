@@ -18,7 +18,9 @@ export const preFormat = (html: string) => {
 };
 
 const parseHTML = (html: string) => {
+  // console.log(html);
   const preFormatted = preFormat(html);
+  // console.log(preFormatted);
   const $ = cheerio.load(preFormatted);
 
   type Section = { name: string; QAndAs: QAndA[] };
@@ -47,24 +49,24 @@ const parseHTML = (html: string) => {
               }
             });
 
-            if (hasSubPars) {
-              const answerOutput = $('<div></div>');
-              const p = $('<p></p>');
-              // if it has subPars, it will not have multiple <li>'s (answers) innerAnswers.length should be 1
-              p.append(innerAnswers.html());
-              answerOutput.append(p);
-              subPars.each(function () {
-                const subPar = $(this);
-                if (subPar.hasClass('faq-sub-p')) {
-                  const list = $('<ul></ul>');
-                  const subHTML = subPar.html();
-                  if (subHTML) list.append(subHTML);
-                  answerOutput.append(list);
-                }
-              });
-              questionOutput.answers.push(answerOutput.html());
-            } else {
-              innerAnswers.each(function () {
+            innerAnswers.each(function (i) {
+              // if it has subPars, attach to the last <li>
+              if (hasSubPars && i === innerAnswers.length - 1) {
+                const answerOutput = $('<div></div>');
+                const p = $('<p></p>');
+                p.append(innerAnswers.html());
+                answerOutput.append(p);
+                subPars.each(function () {
+                  const subPar = $(this);
+                  if (subPar.hasClass('faq-sub-p')) {
+                    const list = $('<ul></ul>');
+                    const subHTML = subPar.html();
+                    if (subHTML) list.append(subHTML);
+                    answerOutput.append(list);
+                  }
+                });
+                questionOutput.answers.push(answerOutput.html());
+              } else {
                 const answerOutput = $('<div></div>');
                 const p = $('<p></p>');
                 if ($(this).html().length > 2) {
@@ -72,8 +74,8 @@ const parseHTML = (html: string) => {
                 }
                 answerOutput.append(p);
                 questionOutput.answers.push(answerOutput.html());
-              });
-            }
+              }
+            });
           }
         });
         sectionOutput.QAndAs.push(questionOutput);
