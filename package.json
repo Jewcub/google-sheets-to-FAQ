@@ -8,6 +8,8 @@
     "start": "yarn build:client && yarn start:server",
     "dev:client": "cd ./client && yarn dev",
     "dev:server": "cd ./server && yarn dev",
+    "test-watch:server": "cd server && yarn test-watch",
+    "test:server": "cd server && yarn test",
     "dev": "yarn dev:client && yarn dev:server",
     "deploy:image": "sh build.sh",
     "deploy": "yarn build:client && yarn deploy:image"

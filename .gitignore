@@ -110,7 +110,7 @@ server/googleService/token.json
 
 client/build/**/*
 client/build/
-server/src/files
+server/src/files/token.json
 .DS_Store
 server/dist
-server/tsconfig.json
+server/.DS_Store

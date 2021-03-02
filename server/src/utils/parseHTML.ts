@@ -1,65 +1,83 @@
 import cheerio = require('cheerio');
-const parseHTML = (html: string) => {
-  const $ = cheerio.load(html);
+
+export const preFormat = (html: string) => {
+  const withoutHead = html.split('</head>')[1].slice(0, -1);
+  const $ = cheerio.load(withoutHead);
+  // find all the cow-o's and replace to section class
+  $(`[class*=cowc-0]`).removeClass().addClass('faq-section');
+  $(`[class*=cowc-1]`).removeClass().addClass('faq-question');
+  $(`[class*=cowc-2]`).removeClass().addClass('faq-answer');
+  $(`[class*=cowc-3]`).removeClass().addClass('faq-sub-p');
   // replace google stylings into classes
+
   $(`[style*="font-weight:700"]`).addClass('g-bold');
   $(`[style*="font-style:italic"]`).addClass('g-italic');
   $(`[style*="text-decoration:underline"]`).addClass('g-underline');
   $('*').removeAttr('style'); // remove all styles
-  // find all the cow-o's and replace to section class
-  $('*').find(`[class*=cowc-0]`).removeClass('').addClass('faq-section');
-  // consider using toArray() to avoid using $(this)
+  return $('body').html();
+};
 
-  console.log({ body: $('body').html() });
+const parseHTML = (html: string) => {
+  const preFormatted = preFormat(html);
+  const $ = cheerio.load(preFormatted);
+
+  type Section = { name: string; QAndAs: QAndA[] };
   type QAndA = { question: string; answers: string[] };
-  type section = {
-    name: string;
-    QAndAs: QAndA[];
-  };
-
-  const output: { sections: section[] } = { sections: [] };
+  const output: { sections: Section[] } = { sections: [] };
   // Jquery cannot use arrow function is we want 'this' to be correct
-  $('[class*=cowc-0]').each(function (i, el) {
+  $('.faq-section').each(function (i, el) {
     const section = $(this);
-    const sectionOutput: section = { name: section.find('span').text(), QAndAs: [] };
-
-    const questions = section.nextUntil('[class*=cowc-0]');
-    const QArray = questions.map(function (i, el) {
-      console.log($(this).html());
-      $(this).html();
-    });
-
+    const sectionOutput: Section = { name: section.find('span').text(), QAndAs: [] };
+    const questions = section.nextUntil('.faq-section');
     questions.each(function () {
-      //@ts-ignore
+      const question = $(this);
+      if (question.hasClass('faq-question')) {
+        const questionOutput: QAndA = { question: question.find('span').text(), answers: [] };
+        const answers = question.nextUntil('.faq-question');
+        answers.each(function () {
+          const answer = $(this);
+          if (answer.hasClass('faq-answer')) {
+            const innerAnswers = answer.find('li');
+            const subPars = answer.nextUntil('.faq-answer');
+            let hasSubPars = false;
+            subPars.each(function () {
+              if ($(this).hasClass('faq-sub-p')) {
+                hasSubPars = true;
+                return;
+              }
+            });
 
-      const Q = $(this);
-      const QOutput: QAndA = { question: Q.find('span').text(), answers: [] };
-      const As = Q.nextUntil('[class*=cowc-1]');
-      As.each(function () {
-        //@ts-ignore
-        const A = $(this);
-
-        const answer = $('<div></div>');
-        // if it has sub paragraphs
-        if (A.attr('class')?.includes('cowc-2')) {
-          answer.append('<p>' + A.find('li').html() + '</p>');
-          const subs = A.nextUntil('[class*=cowc-2]');
-          if (subs.length > 0) {
-            const list = $('<ul></ul>');
-            const subHTML = subs.html();
-            if (subHTML) list.append(subHTML);
-            answer.append(list);
+            if (hasSubPars) {
+              const answerOutput = $('<div></div>');
+              const p = $('<p></p>');
+              // if it has subPars, it will not have multiple <li>'s (answers) innerAnswers.length should be 1
+              p.append(innerAnswers.html());
+              answerOutput.append(p);
+              subPars.each(function () {
+                const subPar = $(this);
+                if (subPar.hasClass('faq-sub-p')) {
+                  const list = $('<ul></ul>');
+                  const subHTML = subPar.html();
+                  if (subHTML) list.append(subHTML);
+                  answerOutput.append(list);
+                }
+              });
+              questionOutput.answers.push(answerOutput.html());
+            } else {
+              innerAnswers.each(function () {
+                const answerOutput = $('<div></div>');
+                const p = $('<p></p>');
+                if ($(this).html().length > 2) {
+                  p.append($(this).html());
+                }
+                answerOutput.append(p);
+                questionOutput.answers.push(answerOutput.html());
+              });
+            }
           }
-        }
-        // console.log({
-        //   answerHtml: answer.html(),
-        //   length: JSON.stringify(answer.html().valueOf()).length,
-        // });
-        const answerHTML = answer.html();
-        if (answerHTML && JSON.stringify(answerHTML).length > 2) QOutput.answers.push(answerHTML);
-      });
-      console.log({ QOutput });
-      sectionOutput.QAndAs.push(QOutput);
+        });
+        sectionOutput.QAndAs.push(questionOutput);
+      }
     });
     output.sections.push(sectionOutput);
   });
