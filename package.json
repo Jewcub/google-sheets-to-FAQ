@@ -5,18 +5,14 @@
   "scripts": {
     "start:server": "cd ./server && yarn start",
     "build:client": "cd ./client && yarn build",
-    "start": "run-s build:client start:server",
+    "start": "yarn build:client && yarn start:server",
     "dev:client": "cd ./client && yarn dev",
     "dev:server": "cd ./server && yarn dev",
-    "dev": "run-s dev:*",
+    "dev": "yarn dev:client && yarn dev:server",
     "deploy:image": "sh build.sh",
-    "deploy": "run-s build:client deploy:image"
+    "deploy": "yarn build:client && yarn deploy:image"
   },
   "repository": "https://github.com/Jewcub/google-sheets-to-FAQ.git",
   "author": "Jewcub <52448067+Jewcub@users.noreply.github.com>",
-  "license": "MIT",
-  "dependencies": {
-    "npm-run-all": "^4.1.5"
-  },
-  "devDependencies": {}
+  "license": "MIT"
 }

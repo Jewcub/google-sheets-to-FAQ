@@ -1,10 +1,5 @@
 FROM node:12-slim
 
-WORKDIR /usr/src/app
-COPY package.json ./
-COPY ./yarn.lock ./
-RUN yarn install
-
 WORKDIR /usr/src/app/server
 COPY ./server/package.json ./
 COPY ./server/yarn.lock ./
