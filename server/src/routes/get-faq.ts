@@ -50,11 +50,11 @@ const getFAQ = async (router: Router) => {
       let localFiles = await localFilesTimes();
       console.log({ localFiles });
       const modified = await getFileModified(docID);
-      console.log({ modified });
+      // console.log({ modified });
       const modifiedTime = new Date(modified).getTime();
-      console.log({ modifiedTime });
+      // console.log({ modifiedTime });
       let mostRecentLocal = Math.max(...localFiles);
-      console.log({ mostRecentLocal });
+      // console.log({ mostRecentLocal });
       const wasModified = modifiedTime > mostRecentLocal;
       console.log({ wasModified });
 

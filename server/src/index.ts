@@ -2,8 +2,7 @@ import express = require('express');
 import cors = require('cors');
 import path = require('path');
 import config from './config';
-const projectPath = config.projectPath;
-const PORT = process.env.PORT || process.env.NODE_ENV === 'production' ? 80 : 3001;
+const { projectPath, PORT } = config;
 
 import indexRouter from './routes/index';
 // reload

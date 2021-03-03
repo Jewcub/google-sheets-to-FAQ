@@ -131,9 +131,9 @@ async function downloadFile(fileId: string, filePath: string) {
 const getFileModified = async (fileId: string) => {
   const drive = await connectDrive();
   const res = await drive.files.get({ fileId, fields: 'modifiedTime' });
-  console.log({ res: res.data.modifiedTime });
+  // console.log({ res: res.data.modifiedTime });
   const result = res.data.modifiedTime;
-  console.log({ result });
+  // console.log({ result });
   return result;
 };
 
