@@ -11,7 +11,7 @@ const PORT = process.env.PORT || process.env.NODE_ENV === 'production' ? 3000 : 
 
 const redirectUris =
   process.env.NODE_ENV === 'production'
-    ? ['https://jacob-testing-app.xyz']
-    : ['http://localhost:3000', 'http://localhost:3001'];
+    ? ['https://is-a-test.xyz']
+    : ['http://localhost:'+ PORT];
 // console.log("client secret", process.env.CLIENT_SECRET);
 export default { projectPath, srcPath, docID, redirectUris, PORT };

@@ -1,6 +1,6 @@
 # doc2faq
 
-View [example](https://jacob-testing-app.xyz)
+View [example](https://is-a-test.xyz/faq)
 
 Pull content from a google doc to generate a FAQ page
 
@@ -71,6 +71,13 @@ yarn inst
 then copy the .env file into /server/
 add server's host name to [google redirect urls](https://console.cloud.google.com/apis/credentials) in `credentials` > `Authorized redirect URIs`
 add url to `redirectUris` in server/config.ts
+
+for nginx: 
+```
+mkdir /var/www/is-a-test.xyz/html
+ln -s <full path to file>/client/build /var/www/is-a-test.xyz/html
+ln -s <full path to file>/deploy/is-a-test.xyz /etc/nginx/sites-enabled/
+```
 
 ```bash
 yarn start

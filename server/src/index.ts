@@ -27,13 +27,13 @@ app.use(cors());
 
 app.use('/api', indexRouter);
 
-app.get('/', (req, res) => {
+app.get('/faq', (req, res) => {
   console.log('sending file', projectPath + '/client/build/');
   res.sendFile(projectPath + '/client/build/');
 });
 
 app.listen(PORT, () => {
-  console.log(`app listening on port: ${PORT}. project path${projectPath}`);
+  console.log(`app listening on port: http://localhost:${PORT}. project path${projectPath}`);
 });
 
 // module.exports = app;
