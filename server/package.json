@@ -5,7 +5,7 @@
   "scripts": {
     "start": "yarn build && env NODE_ENV='production' node dist/index.js",
     "dev": "ts-node-dev --inspect --poll --respawn ./src src/index.ts",
-    "build": "tsc -p tsconfig.build.json && cp -r ./src/files ./dist/files",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && mkdir ./dist/files && cp ./src/files/token.json ./dist/files/token.json",
     "test": "jest",
     "test-watch": "jest --watchAll"
   },

@@ -87,7 +87,7 @@ Docker deploy on Google cloud run (TO DO)
 
 install google cloud [sdk](https://cloud.google.com/sdk/docs/install#mac)
 
-Docker Google Cloud Run Deploy strat:
+Docker Google Cloud Run Deploy start:
 deploy once. get uri and add to uri list (in config)
 in cloud run edit and deploy revision:
 copy token.json info into the envs

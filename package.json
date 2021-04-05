@@ -5,6 +5,7 @@
   "scripts": {
     "start:server": "cd ./server && yarn start",
     "build:client": "cd ./client && yarn build",
+    "build:server": "cd ./server && yarn build",
     "start": "yarn build:client && yarn start:server",
     "dev:client": "cd ./client && yarn dev",
     "dev:server": "cd ./server && yarn dev",
@@ -12,7 +13,7 @@
     "test:server": "cd server && yarn test",
     "dev": "yarn dev:client && yarn dev:server",
     "deploy:image": "sh build.sh",
-    "deploy": "yarn build:client && yarn deploy:image",
+    "deploy": "yarn build:client && yarn build:server && yarn deploy:image",
     "inst": "cd ./server && yarn install && cd ../client && yarn install"
   },
   "repository": "https://github.com/Jewcub/doc2faq.git",
