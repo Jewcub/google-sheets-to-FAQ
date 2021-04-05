@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function Body({ content }) {
   const [selected, setSelected] = useState(content.sections[0].name);
-  console.log({ content });
+  // console.log({ content });
   return (
     <div className="faq-body">
       <div className="button-bar">
